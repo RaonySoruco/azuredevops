@@ -1,0 +1,55 @@
+from azure.devops.connection import Connection
+
+from msrest.authentication import BasicAuthentication
+
+import pprint
+
+
+
+# Fill in with your personal access token and org URL
+
+personal_access_token = 'xxxxxxxxxxxxxx'
+
+organization_url = 'https://'
+
+
+
+# Create a connection to the org
+
+credentials = BasicAuthentication('', personal_access_token)
+
+connection = Connection(base_url=organization_url, creds=credentials)
+
+
+
+# Get a client (the "core" client provides access to projects, teams, etc)
+
+core_client = connection.clients.get_core_client()
+
+
+
+# Get the first page of projects
+
+get_projects_response = core_client.get_projects()
+
+index = 0
+
+
+
+pipe = connection.clients_v5_1.get_pipelines_client()
+
+
+
+response = pipe.list_pipelines('CoreBanking')
+
+release_index = 0
+
+for res in response.value:
+
+    pprint.pprint(f'ReleaseName:  {res.name} e Release ID: {res.id}')
+
+    release_index += 1
+
+
+
+pprint.pprint(f'total de Releases: {release_index}') 
